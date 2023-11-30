@@ -30,16 +30,15 @@ class AdzanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adzanViewModel.getDailyAdzanTime().observe(viewLifecycleOwner) {
             when (it) {
-                is Resource.Loading -> {}
+                is Resource.Loading -> showLoading(true)
                 is Resource.Success -> {
                     it.data?.let { adzanResult ->
-                        val locality = adzanResult.listAddress[1]
-                        binding.tvLocation.text = "jkbkjbjb"
-                        val currentDate = adzanResult.currentDate[3]
-                        binding.tvDate.text = "kjkkbjkb"
+                        binding.tvLocation.text = adzanResult.listAddress[1]
+                        binding.tvDate.text = adzanResult.currentDate[3]
+                        showLoading(false)
                     }
                     when (val adzanTime = it.data?.adzanTime) {
-                        is Resource.Loading -> {}
+                        is Resource.Loading -> showLoading(true)
                         is Resource.Success -> {
                             binding.apply {
                                 adzanTime.data?.let { time ->
@@ -55,7 +54,8 @@ class AdzanFragment : Fragment() {
 
                         is Resource.Error -> {
                             Log.e("AdzanFragment", "getting id city: ${it.message}")
-                            Toast.makeText(context, "Sorry something wrong.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Sorry something wrong.", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
                         else -> {
@@ -65,13 +65,26 @@ class AdzanFragment : Fragment() {
                 }
 
                 is Resource.Error -> {
-                    Log.e("AdzanFragment", "onError AdzanViewModel: ${it.message}", )
+                    Log.e("AdzanFragment", "onError AdzanViewModel: ${it.message}")
                     Toast.makeText(
                         context,
                         "Sorry something happened, getting error.",
                         Toast.LENGTH_SHORT
                     ).show()
+                    showLoading(false)
                 }
+            }
+        }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.apply {
+            if (isLoading) {
+                progressBarAdzanTime.visibility = View.VISIBLE
+                cvAdzanTime.visibility = View.INVISIBLE
+            } else {
+                progressBarAdzanTime.visibility = View.INVISIBLE
+                cvAdzanTime.visibility = View.VISIBLE
             }
         }
     }

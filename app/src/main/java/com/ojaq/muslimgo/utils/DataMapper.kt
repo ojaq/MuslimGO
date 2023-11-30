@@ -90,6 +90,6 @@ object DataMapper {
             ashar = input.ashar,
             maghrib = input.maghrib,
         )
-        return flowOf()
+        return flowOf(jadwal)
     }
 }

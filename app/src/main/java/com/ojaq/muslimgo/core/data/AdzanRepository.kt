@@ -77,7 +77,7 @@ class AdzanRepository(
         resultData.addSource(listLocation) {
             resultData.value = combineLatestData(listLocation, adzanTime, currentDate)
         }
-        resultData.addSource(listCity) {
+        resultData.addSource(adzanTime) {
             resultData.value = combineLatestData(listLocation, adzanTime, currentDate)
         }
         return resultData
